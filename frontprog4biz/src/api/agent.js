@@ -23,7 +23,9 @@ const requests = {
 
 const Person = {
     getAll: () => requests.get(baseUrl + "person"),
-    createPerson: (person) => requests.post(baseUrl + "person",person)
+    createPerson: (person) => {
+       return  requests.post(baseUrl + "person",person);
+    }
 }
 
 export default {
