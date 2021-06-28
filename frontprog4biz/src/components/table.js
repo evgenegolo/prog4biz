@@ -6,86 +6,57 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import { useTable } from 'react-table'
-import { useState ,useEffect , useMemo } from 'react';
-
+import { useState, useEffect, useMemo } from 'react';
+import { DataGrid } from '@material-ui/data-grid';
 import agent from '../api/agent';
 
-function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
-
-  // Render the UI for your table
-  return (
-    <MaUTable {...getTableProps()}>
-      <TableHead>
-        {headerGroups.map(headerGroup => (
-          <TableRow {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <TableCell {...column.getHeaderProps()}>
-                {column.render('Header')}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableHead>
-      <TableBody>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          return (
-            <TableRow {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return (
-                  <TableCell {...cell.getCellProps()}>
-                    {cell.render('Cell')}
-                  </TableCell>
-                )
-              })}
-            </TableRow>
-          )
-        })}
-      </TableBody>
-    </MaUTable>
-  )
-}
 
 
+function CreateTable() {
 
-function CreateTable (){
-  
-  const [data, setData] = useState([]);
+  const [person, setPerson] = useState([]);
+  const [pageSize , setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalCount, setTotalCount] = useState(10);
 
-  const columns = React.useMemo(
-    () => [
-      { 
-        Header: 'ID', 
-        accessor: 'id',
-      },
-      {
-          Header: 'First name',
-          accessor: 'firstName',
-      },
-      {
-          Header: 'Last name',
-          accessor: 'lastName',
-      },
-      {
-        Header: 'Creation Date',
-        accessor: 'creationDate',
-      }
-    ],
-    []
-  )
+
+  const columns = [
+  { field: 'id', headerName: 'ID', width: 200 },
+  { field: 'firstName', headerName: 'First name', width: 200 },
+  { field: 'lastName', headerName: 'Last name', width: 200 },
+  { field: 'creationDate', headerName: 'Creation Date', width: 200 },
+  ];
   useEffect(() => {
-    agent.Person.getAll().then(res => setData(res));
-  }, [])
+    console.log("update");
+    agent.Person.getAll(pageSize,pageNumber).then(res => {
+      setPerson(res.persons);
+      setTotalCount(res.count);
+    });
+  }, [pageSize,pageNumber])
 
 
 
   return (
-    <Table columns={columns} data={data} />
+    // <Table columns={columns} data={data} pageSize={5} />
+    <div >
+      <DataGrid rows={person} columns={columns} pageSize={pageSize} 
+          autoHeight
+          pagination
+          paginationMode="server"
+          loading={false}
+          rowCount={totalCount}
+          onPageChange={(event) => {
+            console.log(event.page);
+            setPageNumber(event.page+1);
+           
+        }}
+        onPageSizeChange={(event) => {
+          setPageSize(event.pageSize);
+        }}
+      
+      
+      />
+    </div>
   )
 }
 export default CreateTable;

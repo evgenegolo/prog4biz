@@ -17,22 +17,31 @@ namespace API.Controllers
         public PersonController(DataContext objperson)
         {
             this.dbContext = objperson;
+        
         }
 
         [HttpGet]
-        public IEnumerable<PersonDto> Index()
+        public IActionResult Index([FromQuery]PaginationDto pageDto)
         {
 
-           var persons = dbContext.Persons.ToList()
+           int pageNumber = pageDto.PageNumber - 1;
+           int items = pageDto.ItemsPerPage;
+
+           var persons = dbContext.Persons
+           .Skip(pageNumber * items)
+            .Take(items)
            .Select(x=>new PersonDto(){
                FirstName =x.FirstName,
                LastName = x.LastName,
                CreationDate = x.CreationDate,
                Id = x.Id 
            })
-           ;
-           return(persons);
+           .ToList();
+            var temp = new {persons,count = dbContext.Persons.Count()};
+           return(Ok(temp));
         }
+
+          
 
         [HttpPost]
         public bool Create(PersoCreatenDto persoCreatenDto)

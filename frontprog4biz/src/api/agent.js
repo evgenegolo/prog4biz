@@ -6,7 +6,9 @@ const baseUrl = "https://localhost:5001/api/"
 const responseBody = (response) => response.data;
 
 const requests = {
-    get: (url) => axios.get(url).then(responseBody),
+    get: (url, queryParams) => axios.get(url,{
+        params: queryParams
+    }).then(responseBody),
     post: (url, body) => axios.post(url, body).catch(function (error){
         if(error.response)
             return false;
@@ -27,7 +29,10 @@ const requests = {
 };
 
 const Person = {
-    getAll: () => requests.get(baseUrl + "person"),
+    getAll: (pageSize,pageNumber) => requests.get(baseUrl + "person",{
+        itemsPerPage:pageSize ?? 10,
+        pageNumber
+    }),
     createPerson: (person) => {
        let promise =requests.post(baseUrl + "person",person)
        return promise;

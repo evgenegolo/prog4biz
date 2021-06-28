@@ -4,8 +4,8 @@ import  FetchPerson  from './components/FetchPerson';
 const divStyle = {
   marginTop:'5rem',
   marginLeft:'15rem',
-  width: 1200,
-  backgroundColor: "#fbc23b",
+  width: 1500,
+  backgroundColor: "#E7FFD9",
 }
 
 function App() {
