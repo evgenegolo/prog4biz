@@ -70,6 +70,10 @@ function CreateTable (){
       {
           Header: 'Last name',
           accessor: 'lastName',
+      },
+      {
+        Header: 'Creation Date',
+        accessor: 'creationDate',
       }
     ],
     []

@@ -7,79 +7,101 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  
+  root:{
+    display:'flex',
+    flexDirection:'column',
+    padding:'5em',
+  },
+
+  form: {
     '& > *': {
-      flex: 1,
       margin: theme.spacing(1),
       width: '25ch',
     },
-  },
+    dateField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
+  }
+
 }));
 
 
 export default function CreatePerson() {
 
-const classes = useStyles();
+  const classes = useStyles();
 
-const  setFirstName=(event) => {
-const value = event.target.value;
-setPerson({...person,firstName:value})
-}
-
-const  setLastName=(event) => {
+  const  setFirstName=(event) => {
   const value = event.target.value;
-  setPerson({...person,lastName:value})
-  }
-  const  setCreationDate=(event) => {
-    const value = event.target.value;
-    setPerson({...person,creationDate:value})
+  setPerson({...person,firstName:value})
     }
 
+  const  setLastName=(event) => {
+    const value = event.target.value;
+    setPerson({...person,lastName:value})
+    }
+
+  const  setCreationDate=(event) => {
+      const value = event.target.value;
+      setPerson({...person,creationDate:value})
+    }
+
+      
+
+    const [person,setPerson]= useState({firstName:"",lastName:"" ,creationDate:""});
+    const [sucses, setSucses] = React.useState(false);
+    const [error, setError] = React.useState(false);
+    const [ans, setAns] = React.useState(false);
     
+    const onSubmit = ()=>{
+      let ans = agent.Person.createPerson(person);
+      if(ans === true)
+        setSucses(true);
+      else
+        setError(true);
+      
+    }
 
-  const [person,setPerson]= useState({firstName:"",lastName:"" ,creationDate:""});
-  const [sucses, setSucses] = React.useState(false);
-  const [error, setError] = React.useState(false);
-  const [ans, setAns] = React.useState(false);
+    return (
+      <div className={classes.root} >
+          <form className={classes.form} noValidate autoComplete="off">
+            <TextField id="outlined-basic" label="First Name" variant="outlined" onChange={setFirstName} />
+            <TextField id="outlined-basic" label="Last Name" variant="outlined" onChange={setLastName} />
+            <TextField
+                id="date"
+                label="Creation Date"
+                type="date"
+                defaultValue="2017-05-24"
+                className={classes.dateField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={setCreationDate}
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={onSubmit}
+            >
+              Submit
+            </Button>
+          </form>
+          
+        <Snackbar open={sucses} autoHideDuration={6000} >
+          <Alert  severity="success">
+            This is a success message!
+          </Alert>
+        </Snackbar>
 
-  const onSubmit = ()=>{
-    agent.Person.createPerson(person)>= 0?setAns(true):setAns(false);
-
-    if(ans === true)
-      setSucses(true);
-    else
-      setSucses(true);
-    
-  }
-
-  return (
-    <div className="createPerson">
-        <form className={classes.root} noValidate autoComplete="off">
-          <TextField id="outlined-basic" label="First Name" variant="outlined" onChange={setFirstName} />
-          <TextField id="outlined-basic" label="Last Name" variant="outlined" onChange={setLastName} />
-          <TextField id="outlined-basic" label="Date" variant="outlined" onChange={setCreationDate} />
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={onSubmit}
-          >
-            Submit
-          </Button>
-        </form>
-        
-      <Snackbar open={sucses} autoHideDuration={6000} >
-        <Alert  severity="success">
-          This is a success message!
-        </Alert>
-      </Snackbar>
-
-      <Snackbar open={error} autoHideDuration={6000}>
-        <Alert  severity="error">
-          This is an error message!        
-        </Alert>
-      </Snackbar>
-    </div>
-  );
+        <Snackbar open={error} autoHideDuration={6000}>
+          <Alert  severity="error">
+            This is an error message!        
+          </Alert>
+        </Snackbar>
+      </div>
+    );
 }
 
 function Alert(props) {

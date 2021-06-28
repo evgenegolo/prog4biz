@@ -31,6 +31,10 @@ function FetchPerson () {
                 <Dialog
                      open={openDialog || false}
                      onClose={()=>setopenDialog(false)}
+                     style={{
+                         display:'flex',
+                         flexDirection:'column',
+                     }}
                 >
                     <CreatePerson />                    
                 </Dialog>

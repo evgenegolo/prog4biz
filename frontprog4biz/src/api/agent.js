@@ -7,7 +7,12 @@ const responseBody = (response) => response.data;
 
 const requests = {
     get: (url) => axios.get(url).then(responseBody),
-    post: (url, body) => axios.post(url, body).then(responseBody),
+    post: (url, body) => axios.post(url, body).catch(function (error){
+        if(error.response)
+            return false;
+        else
+            return true;
+    }),
     put: (url, body) => axios.put(url, body).then(responseBody),
     del: (url) => axios.delete(url).then(responseBody),
     // postForm: (url, file) => {
@@ -24,7 +29,8 @@ const requests = {
 const Person = {
     getAll: () => requests.get(baseUrl + "person"),
     createPerson: (person) => {
-       return  requests.post(baseUrl + "person",person);
+       let promise =requests.post(baseUrl + "person",person)
+       return promise;
     }
 }
 

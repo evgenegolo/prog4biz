@@ -35,7 +35,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public int Create(PersoCreatenDto persoCreatenDto)
+        public bool Create(PersoCreatenDto persoCreatenDto)
         {
             var person = new Person()
             {
@@ -45,7 +45,7 @@ namespace API.Controllers
             };
             dbContext.Persons.Add(person);
             dbContext.SaveChanges();
-            return person.Id;
+            return true;
         }
 
     }
